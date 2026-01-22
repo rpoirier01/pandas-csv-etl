@@ -2,16 +2,9 @@
 
 import pandas as pd
 from datetime import datetime
-# import string
+
 
 data_frame = pd.read_csv('Air_Quality.csv', parse_dates=['Start_Date'])
-# air_quality_trimmed = pd.read_csv('Air_Quality_Trimmed.csv')
-# only_ozone = pd.read_csv('Air_Quality_OnlyOzone.csv')
-# results_2025 = pd.read_csv('Air_Quality_2025.csv')
-
-#print(results_2025.head())
-
-# print(only_ozone.head())
 
 
 def filter_to_date_place_value(csv_data_frame, output_path):
@@ -32,7 +25,6 @@ def filter_to_2025(csv_data_frame, output_path, start_date, end_date): #Had Chat
     #csv_data_frame[str(csv_data_frame['Start_Date']).str.contains("2025")].to_csv('./Air_Quality_2025.csv', index=False)
 
     #csv_data_frame[csv_data_frame['Start_Date'] <= jan_2026 and csv_data_frame['Start_Date'] >= jan_2025 ].to_csv('./Air_Quality_2025.csv', index=False)
-    # print(type(csv_data_frame))
     csv_data_frame[(csv_data_frame['Start_Date'] >= start_date) & (csv_data_frame['Start_Date'] <= end_date )].to_csv(output_path, index=False)
     print('After filtering to the specific time range ' + str(pd.read_csv(output_path).shape[0]) + ' records remain')
 
@@ -55,8 +47,6 @@ def ozone_data_cleaned_2025(original_csv_data_frame, output_csv_path, save_middl
     else:
         print('The original CSV contained ' + str(original_csv_data_frame.shape[0]) + ' rows')
         filter_to_2025(filter_only_ozone_in_place(filter_to_date_place_value_in_place(original_csv_data_frame)), output_csv_path, start_date, end_date)
-
-    #filter_only_ozone(data_frame, "Air_Quality_test.csv")
     
 
 ozone_data_cleaned_2025(data_frame, 'Air_Quality_Test_Long.csv', True)
