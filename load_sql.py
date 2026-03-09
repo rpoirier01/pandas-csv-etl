@@ -82,7 +82,6 @@ def get_highest_NO2_values():
             LIMIT 10
         ''')
         return cursor.fetchall()
-        
 
 def get_recent_high_NO2_locations():
     with sqlite3.connect('pollutant_data.db') as connection:
@@ -97,6 +96,20 @@ def get_recent_high_NO2_locations():
             LIMIT 10
         ''')
         return cursor.fetchall()
+
+def get_recent_high_NO2_locations_as_dataframe():
+    query = '''
+                SELECT pollutants.name, pollutants.unit, measurements.value, place_time.place, place_time.time_period, place_time.start_date
+                FROM measurements
+                LEFT JOIN pollutants ON measurements.pollutant_id=pollutants.id
+                LEFT JOIN place_time ON measurements.place_time_id=place_time.id
+                WHERE pollutants.name = "Nitrogen dioxide (NO2)" AND measurements.value > 40
+                ORDER BY place_time.start_date DESC
+                LIMIT 10
+            '''
+    with sqlite3.connect('pollutant_data.db') as connection:
+        return pd.read_sql(query, connection)
+
 
 def rename_fields(dataframe):
     dataframe = dataframe.rename(columns={
@@ -161,5 +174,6 @@ def csv_to_sql_tables(csv_path):
 
 csv_to_sql_tables('venv\Air_Quality.csv')
 get_highest_NO2_values()
-print(get_recent_high_NO2_locations())#Returns most recent concentrations of NO2 above 40 PPB
+# print(get_recent_high_NO2_locations())#Returns most recent concentrations of NO2 above 40 PPB
     
+# print(get_recent_high_NO2_locations_as_dataframe().head())
